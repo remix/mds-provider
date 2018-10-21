@@ -92,25 +92,26 @@ class CustomJsonEncoder(json.JSONEncoder):
         - Point/Polygon -> GeoJSON Feature
         - tuple -> list
         - UUID -> str
+
+    Initialize a `CustomJsonEncoder` with an optional :date_format:
+        - `unix` to format dates as integer milliseconds since Unix epoch (MDS default)
+        - `iso8601` to format dates as ISO 8601 strings
+        - `<python format string>` for custom formats
     """
 
     def __init__(self, *args, **kwargs):
-        """
-        Initialize a `CustomJsonEncoder` with an optional :date_format:
-           - `unix` to format dates as Unix timestamps
-           - `iso8601` to format dates as ISO 8601 strings
-           - `<python format string>` for custom formats
-        """
         if "date_format" in kwargs:
             self.date_format = kwargs["date_format"]
             del kwargs["date_format"]
+        else:
+            self.date_format = "unix"
 
         json.JSONEncoder.__init__(self, *args, **kwargs)
 
     def default(self, obj):
         if isinstance(obj, datetime):
             if self.date_format == "unix":
-                return obj.timestamp()
+                return int(round(obj.timestamp() * 1000))
             elif self.date_format == "iso8601":
                 return obj.isoformat()
             elif self.date_format is not None:

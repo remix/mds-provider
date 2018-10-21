@@ -6,6 +6,7 @@ from datetime import datetime
 import json
 import mds
 from mds.api.auth import OAuthClientCredentialsAuth
+from mds.json import CustomJsonEncoder
 from mds.providers import get_registry, Provider
 
 
@@ -25,6 +26,7 @@ class ProviderClient(OAuthClientCredentialsAuth):
             - git tag
         """
         self.providers = providers if providers is not None else get_registry(ref)
+        self.encoder = CustomJsonEncoder()
 
     def _auth_session(self, provider):
         """
@@ -93,7 +95,7 @@ class ProviderClient(OAuthClientCredentialsAuth):
         """
         Internal helper to format datetimes for querystrings.
         """
-        return int(dt.timestamp()) if isinstance(dt, datetime) else int(dt)
+        return self.encoder.encode(dt) if isinstance(dt, datetime) else int(dt)
 
     def get_status_changes(self,
                            providers=None,
@@ -109,10 +111,10 @@ class ProviderClient(OAuthClientCredentialsAuth):
                            The default is to issue the request to all Providers.
 
             - `start_time`: Filters for status changes where `event_time` occurs at or after the given time
-                            Should be a datetime object or numeric representation of UNIX seconds
+                            Should be a datetime object or numeric representation of UNIX milliseconds
 
             - `end_time`: Filters for status changes where `event_time` occurs at or before the given time
-                          Should be a datetime object or numeric representation of UNIX seconds
+                          Should be a datetime object or numeric representation of UNIX milliseconds
 
             - `bbox`: Filters for status changes where `event_location` is within defined bounding-box.
                       The order is defined as: southwest longitude, southwest latitude, 
@@ -162,10 +164,10 @@ class ProviderClient(OAuthClientCredentialsAuth):
             - `vehicle_id`: Filters for trips taken by the given vehicle.
 
             - `start_time`: Filters for trips where `start_time` occurs at or after the given time
-                            Should be a datetime object or numeric representation of UNIX seconds
+                            Should be a datetime object or numeric representation of UNIX milliseconds
 
             - `end_time`: Filters for trips where `end_time` occurs at or before the given time
-                          Should be a datetime object or numeric representation of UNIX seconds
+                          Should be a datetime object or numeric representation of UNIX milliseconds
 
             - `bbox`: Filters for trips where and point within `route` is within defined bounding-box.
                       The order is defined as: southwest longitude, southwest latitude, 
