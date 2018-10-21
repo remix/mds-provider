@@ -1,27 +1,25 @@
-# mds-provider
+# mds-provider [![Documentation Status][docs-status]][docs]
 
 Tools for working with [MDS `provider`][provider] data.
 
-Developed and tested with Python 3.7+.
+Developed and tested with Python 3.6.
 
 See [`mds-provider-services`](https://github.com/CityofSantaMonica/mds-provider-services) for real-world usage of many of these tools.
-
-|docs| [Documentation](https://mds-provider.readthedocs.io/en/init-docs/).
 
 ## Installation
 
 Install with `pip`:
 
-```bash
-$ pip install -e git+https://github.com/CityofSantaMonica/mds-provider@master#egg=mds_provider
+```console
+pip install -e git+https://github.com/CityofSantaMonica/mds-provider@master#egg=mds_provider
 ```
 
 Or with `python` directly:
 
-```
-$ git clone https://github.com/CityofSantaMonica/mds-provider.git
-$ cd mds-provider
-$ python setup.py install
+```console
+git clone https://github.com/CityofSantaMonica/mds-provider.git
+cd mds-provider
+python setup.py install
 ```
 
 ## Package organization
@@ -36,7 +34,8 @@ $ python setup.py install
 | [`providers`](mds/providers.py) | Work with the official [MDS Providers registry][registry] |
 | [`schema`](mds/schema/) | Work with the official [MDS Provider JSON schemas][schemas] |
 
-
+[docs]: https://mds-provider.readthedocs.io/
+[docs-status]: https://readthedocs.org/projects/mds-provider/badge/?version=init-docs
 [provider]: https://github.com/CityOfLosAngeles/mobility-data-specification/tree/master/provider
 [registry]: https://github.com/CityofLosAngeles/mobility-data-specification/blob/master/providers.csv
 [schemas]: https://github.com/CityOfLosAngeles/mobility-data-specification/tree/master/generate_schema
