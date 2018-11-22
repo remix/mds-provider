@@ -42,7 +42,7 @@ def point_nearby(point, dist, bearing=None):
     bearing = random.uniform(0, 2*math.pi) if bearing is None else bearing
 
     # calc the new latitude
-    lat2 = math.asin(math.sin(lat1) * math.cos(ang_dist) + 
+    lat2 = math.asin(math.sin(lat1) * math.cos(ang_dist) +
                      math.cos(lat1) * math.sin(ang_dist) * math.cos(bearing))
 
     # calc the new longitude
@@ -52,3 +52,26 @@ def point_nearby(point, dist, bearing=None):
     # return the new point
     return Point(math.degrees(lon2), math.degrees(lat2))
 
+def point_nearby_within(start_point, dist, boundary):
+    """
+    Create a random point :dist: meters from :start_point: within :boundary:.
+
+    If it proves hard to find such a point, return a point within :boundary:
+    that is not more than :dist: meters from :start_point:
+
+    Prerequisites: start_point must itself be within the boundary
+    """
+    MAX_TRIES = 50
+
+    for _ in range(MAX_TRIES):
+        end_point = point_nearby(start_point, dist)
+        if boundary.contains(end_point):
+            return end_point
+
+    # If we got here it's possible there was no point at that exact distance
+    # from our starting point within the boundary; or maybe we were just unlucky.
+    assert(boundary.contains(start_point))
+    while not boundary.contains(end_point):
+        shorter_distance = random.uniform(0, dist)
+        end_point = point_nearby(start_point, shorter_distance)
+    return end_point
