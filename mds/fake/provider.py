@@ -7,7 +7,7 @@ import math
 import mds
 from mds.json import extract_point, to_feature
 from mds.fake.data import random_date_from, random_string, random_file_url
-from mds.fake.geometry import point_within, point_nearby
+from mds.fake.geometry import point_within, point_nearby_within
 from mds.schema import ProviderSchema
 import random
 import scipy.stats
@@ -358,7 +358,7 @@ class ProviderDataGenerator:
         end_time = event_time + timedelta(seconds=trip_duration)
         if end_location is None:
             start_point = extract_point(event_location)
-            end_point = point_nearby(start_point, trip_distance)
+            end_point = point_nearby_within(start_point, trip_distance, self.boundary)
             end_location = to_feature(end_point, properties=dict(timestamp=end_time))
 
         # generate the route object

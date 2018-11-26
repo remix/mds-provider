@@ -52,3 +52,27 @@ def point_nearby(point, dist, bearing=None):
     # return the new point
     return Point(math.degrees(lon2), math.degrees(lat2))
 
+def point_nearby_within(start_point, dist, boundary):
+    """
+    Create a random point :dist: meters from :start_point: within :boundary:.
+
+    If it proves hard to find such a point, return a point within :boundary:
+    that is not more than :dist: meters from :start_point:
+
+    Prerequisites: start_point must itself be within the boundary
+    """
+    MAX_TRIES = 50
+
+    for _ in range(MAX_TRIES):
+        end_point = point_nearby(start_point, dist)
+        if boundary.contains(end_point):
+            return end_point
+
+    # If we got here it's possible there was no point at that exact distance
+    # from our starting point within the boundary; or maybe we were just unlucky.
+    # Shrink the distance to the endpoint until we find one inside the boundary.
+    assert(boundary.contains(start_point))
+    while not boundary.contains(end_point):
+        dist = dist * 0.9
+        end_point = point_nearby(start_point, dist)
+    return end_point
