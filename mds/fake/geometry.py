@@ -70,8 +70,9 @@ def point_nearby_within(start_point, dist, boundary):
 
     # If we got here it's possible there was no point at that exact distance
     # from our starting point within the boundary; or maybe we were just unlucky.
+    # Shrink the distance to the endpoint until we find one inside the boundary.
     assert(boundary.contains(start_point))
     while not boundary.contains(end_point):
-        shorter_distance = random.uniform(0, dist)
-        end_point = point_nearby(start_point, shorter_distance)
+        dist = dist * 0.9
+        end_point = point_nearby(start_point, dist)
     return end_point
