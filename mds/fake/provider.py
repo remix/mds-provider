@@ -29,7 +29,7 @@ class ProviderDataGenerator:
 
     def __init__(self, **kwargs):
         """
-        Initialize a new DataGenerator using the provided context.
+        Initialize a new DataGenerator using the provided context. 
 
         Required keyword arguments:
             - :boundary: is the geographic boundary within which to generate data
@@ -90,7 +90,7 @@ class ProviderDataGenerator:
 
     def service_day(self, devices, date, hour_open, hour_closed, inactivity):
         """
-        Create status change events and trips on :date: between the hours of
+        Create status change events and trips on :date: between the hours of 
         :houropen: and :hourclosed: for the given :devices:.
 
         :inactivity: the percent of devices to mark as inactive for the day
@@ -258,7 +258,7 @@ class ProviderDataGenerator:
             # reset the battery for electric devices
             if self.has_battery(device):
                 self.recharge_battery(device)
-
+            
             # combine with device details and append
             service_changes.append({**device, **service_start})
 
@@ -309,9 +309,9 @@ class ProviderDataGenerator:
         :event_time: is the time the trip should start
 
         :event_location: is the location (Feature) the trip should start
-
+        
         :end_location: is the location (Feature) the trip should end
-
+        
         :reference_time: is the 0-point around which to calculate a random start time
             - :min_td: the minimum time from :reference_time:
             - :max_td: the maximum time from :reference_time:
