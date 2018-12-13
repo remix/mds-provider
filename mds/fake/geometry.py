@@ -69,11 +69,10 @@ def point_nearby(point, dist, bearing=None, boundary=None):
         # from our starting point within the boundary; or maybe we were just unlucky.
         # Shrink the distance to the endpoint until we find one inside the boundary.
         if not boundary.contains(point):
-            raise GeometryError(
-                'point_nearby called with a starting point {} outside the given boundary.'
-                'Aborting because in that case it is not guaranteed to terminate.'.format(point))
-        assert(boundary.contains(point))
+            raise GeometryError(f"Cannot find point nearby the starting point {point}, which is outside the given boundary.")
+
         while not boundary.contains(end_point):
             dist = dist * 0.9
             end_point = point_nearby(point, dist, bearing)
+
         return end_point
