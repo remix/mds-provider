@@ -7,8 +7,6 @@ import random
 from shapely.geometry import Point
 import shapely.ops
 
-class GeometryError(Exception):
-    pass
 
 def point_within(boundary):
     """
@@ -69,7 +67,7 @@ def point_nearby(point, dist, bearing=None, boundary=None):
         # from our starting point within the boundary; or maybe we were just unlucky.
         # Shrink the distance to the endpoint until we find one inside the boundary.
         if not boundary.contains(point):
-            raise GeometryError(f"Cannot find point nearby the starting point {point}, which is outside the given boundary.")
+            raise ValueError(f"Cannot find point nearby the starting point {point}, which is outside the given boundary.")
 
         while not boundary.contains(end_point):
             dist = dist * 0.9
