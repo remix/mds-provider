@@ -41,8 +41,7 @@ def extract_point(feature):
     """
     Extract the coordinates from the given GeoJSON :feature: as a shapely.geometry.Point
     """
-    coords = feature["geometry"]["coordinates"]
-    return shapely.geometry.Point(coords[0], coords[1])
+    return shapely.geometry.shape(feature)
 
 def to_feature(shape, properties={}):
     """
@@ -52,12 +51,13 @@ def to_feature(shape, properties={}):
     """
     feature = shapely.geometry.mapping(shape)
     feature["properties"] = properties
+    feature["geometry"] = {}
 
     if isinstance(shape, shapely.geometry.Point):
-        feature["coordinates"] = list(feature["coordinates"])
+        feature["geometry"]["coordinates"] = list(feature["coordinates"])
     else:
         # assume shape is polygon (multipolygon will break)
-        feature["coordinates"] = [list(list(coords) for coords in part) for part in feature["coordinates"]]
+        feature["geometry"]["coordinates"] = [list(list(coords) for coords in part) for part in feature["coordinates"]]
 
     return feature
 
@@ -125,7 +125,7 @@ class CustomJsonEncoder(json.JSONEncoder):
             else:
                 return str(obj)
 
-        if isinstance(obj, Point) or isinstance(obj, Polygon):
+        if isinstance(obj, shapely.geometry.Point) or isinstance(obj, shapely.geometry.Polygon):
             return to_feature(obj)
 
         if isinstance(obj, tuple):
