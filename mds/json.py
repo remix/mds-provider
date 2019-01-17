@@ -41,7 +41,9 @@ def extract_point(feature):
     """
     Extract the coordinates from the given GeoJSON :feature: as a shapely.geometry.Point
     """
-    return shapely.geometry.shape(feature)
+    coords = feature["geometry"]["coordinates"]
+    return shapely.geometry.Point(coords[0], coords[1])
+
 
 def to_feature(shape, properties={}):
     """
