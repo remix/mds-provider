@@ -59,6 +59,11 @@ def to_feature(shape, properties={}):
         # assume shape is polygon (multipolygon will break)
         feature["geometry"]["coordinates"] = [list(list(coords) for coords in part) for part in feature["coordinates"]]
 
+    # 'type' at the top level is Feature, and in 'geometry' should be set
+    feature["geometry"]["type"] = feature["type"]
+    feature["type"] = "Feature"
+    # 'coordinates' in the top level is not valid geoJSON.
+    feature.pop('coordinates')
     return feature
 
 def read_data_file(src, record_type):
