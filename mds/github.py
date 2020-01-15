@@ -7,14 +7,15 @@ GITHUB = "https://github.com"
 GITHUB_RAW = "https://raw.githubusercontent.com"
 
 MDS_DEFAULT_REF = "master"
-MDS_ORG_NAME = "CityOfLosAngeles"
+MDS_ORG_NAME = "openmobilityfoundation"
 MDS_REPO_NAME = "mobility-data-specification"
 
 MDS = (GITHUB, MDS_ORG_NAME, MDS_REPO_NAME)
 MDS_RAW = (GITHUB_RAW, MDS_ORG_NAME, MDS_REPO_NAME)
 
 MDS_PROVIDER_REGISTRY = "/".join(MDS_RAW + ("{}/providers.csv",))
-MDS_SCHEMA = "/".join(MDS_RAW + ("{}/provider/{}.json",))
+MDS_OLD_SCHEMA = "/".join(MDS_RAW + ("{}/provider/{}.json",))
+MDS_SCHEMA = "/".join(MDS_RAW + ("{}/provider/dockless/{}.json",))
 
 
 def registry_url(ref=None):
@@ -53,4 +54,41 @@ def schema_url(schema_type, ref=None):
         str
     """
     ref = ref or MDS_DEFAULT_REF
-    return MDS_SCHEMA.format(ref, schema_type)
+
+    if is_pre_mds_040(ref):
+        return MDS_OLD_SCHEMA.format(ref, schema_type)
+    else:
+        return MDS_SCHEMA.format(ref, schema_type)
+
+
+def is_pre_mds_040(ref) -> bool:
+    """
+    Tries to determine if an unknown object is a string that represents
+    MDS 0.2.x or 0.3.x. Reason being that the Open Mobility Foundation
+    changed the URL structure of their repo with v0.4.0 by moving schemas
+    to a 'dockless' folder.
+
+    n.b. is not smart enough to determine if a hash is a reference to an older
+    MDS version.
+
+    Parameters:
+        ref: Any
+                Might be an MDS version. Will be coerced to a string.
+
+    Return:
+        bool
+    """
+
+    str_split = str(ref).split('.')
+
+
+    if not len(str_split) == 3:
+        # not a known mds version
+        return False
+
+    mds_semver = [int(i) for i in str_split]
+
+    if mds_semver[0] == 0 and mds_semver[1] < 4:
+        return True
+
+    return False
