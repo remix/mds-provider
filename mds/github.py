@@ -1,6 +1,7 @@
 """
 Data and helpers for MDS on GitHub.
 """
+from .versions import Version
 
 
 GITHUB = "https://github.com"
@@ -79,16 +80,18 @@ def is_pre_mds_040(ref) -> bool:
         bool
     """
 
-    str_split = str(ref).split('.')
-
-
-    if not len(str_split) == 3:
-        # not a known mds version
+    # if not a string representation of a version, e.g. 'master'
+    if isinstance(ref, str) and len(ref.split('.')) < 2:
         return False
 
-    mds_semver = [int(i) for i in str_split]
+    if not isinstance(ref, Version):
+        ref = Version(ref)
 
-    if mds_semver[0] == 0 and mds_semver[1] < 4:
-        return True
+    try:
+        if ref < Version('0.4.0'):
+            return True
 
-    return False
+        return False
+    except e:
+        print(f"Unable to determine MDS version from '{ref}', assuming 0.4.0 or greater. Error: {e}")
+        return False
