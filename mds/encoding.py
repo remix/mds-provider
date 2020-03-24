@@ -112,6 +112,7 @@ class TimestampEncoder():
         Return:
             str
         """
+        import pdb; pdb.set_trace()
         if self.date_format == "unix":
             if self.version < Version("0.3.0"):
                 return str(int(data.timestamp()))
