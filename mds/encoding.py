@@ -110,20 +110,19 @@ class TimestampEncoder():
                 Datetime to encode.
 
         Return:
-            str
+            int | str
         """
-        import pdb; pdb.set_trace()
         if self.date_format == "unix":
             if self.version < Version("0.3.0"):
-                return str(int(data.timestamp()))
+                return int(data.timestamp())
             else:
-                return str(int(round(data.timestamp() * 1000)))
+                return int(round(data.timestamp() * 1000))
         elif self.date_format == "iso8601":
             return data.isoformat()
         elif self.date_format is not None:
             return data.strftime(self.date_format)
         else:
-            return str(int(data))
+            return int(data)
 
 
 class TimestampDecoder():
